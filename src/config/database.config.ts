@@ -18,37 +18,15 @@ export const databaseConfig = (
     username: configService.get<string>('DATABASE_USERNAME', 'postgres'),
     password: configService.get<string>('DATABASE_PASSWORD', 'postgres'),
     database: configService.get<string>('DATABASE_NAME', 'nestjs_graphql'),
-
-    // Entity configuration
     entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-
-    // Migration configuration
-    migrations: [__dirname + '/../migrations/*{.ts,.js}'],
+    migrations: [__dirname + '/../database/migrations/*{.ts,.js}'],
     migrationsTableName: 'migrations',
-
-    // Synchronization settings
     synchronize: isDevelopment, // Only sync in development
-    dropSchema: false,
-
-    // Logging configuration
-    logging: isDevelopment ? ['query', 'error'] : ['error'],
-
-    // Connection pool settings
     extra: {
       connectionLimit: isProduction ? 20 : 5,
       acquireTimeout: 30000,
       timeout: 30000,
     },
-
-    // SSL configuration for production
-    ssl: isProduction ? { rejectUnauthorized: false } : false,
-
-    // Auto-load entities in development
-    autoLoadEntities: true,
-
-    // Retry configuration
-    retryAttempts: 3,
-    retryDelay: 3000,
   };
 };
 

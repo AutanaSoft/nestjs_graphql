@@ -19,4 +19,4 @@ import { graphqlConfig } from '../config/graphql.config';
   ],
   exports: [GraphQLModule],
 })
-export class GraphqlModule {} 
+export class GraphqlModule {}
