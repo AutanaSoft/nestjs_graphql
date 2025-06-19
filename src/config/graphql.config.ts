@@ -9,7 +9,7 @@ export default registerAs(
     path: process.env.GRAPHQL_PATH || '/graphql',
     sortSchema: Boolean(process.env.GRAPHQL_SORT_SCHEMA) || false,
     autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-    playground: Boolean(process.env.GRAPHQL_PLAYGROUND) || false,
+    playground: false,
     introspection: Boolean(process.env.GRAPHQL_INTROSPECTION) || false,
     debug: Boolean(process.env.NODE_ENV === 'development') || false,
     plugins: [
