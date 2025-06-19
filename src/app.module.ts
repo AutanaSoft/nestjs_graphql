@@ -1,21 +1,28 @@
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { GraphQLModule } from '@nestjs/graphql';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { appConfig, databaseConfig, graphqlConfig } from './config';
 import { DatabaseModule } from './database/database.module';
-import { GraphqlModule } from './graphql/graphql.module';
 import { UsersModule } from './users/users.module';
-import appConfig from './config/app.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [appConfig],
+      load: [appConfig, databaseConfig, graphqlConfig],
       envFilePath: ['.env', '.env.local'],
       cache: true,
     }),
-    GraphqlModule,
+    GraphQLModule.forRootAsync({
+      driver: ApolloDriver,
+      useFactory: (configService: ConfigService): ApolloDriverConfig => {
+        return configService.get<ApolloDriverConfig>('graphQLConfig')!;
+      },
+      inject: [ConfigService],
+    }),
     DatabaseModule,
     UsersModule,
   ],

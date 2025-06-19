@@ -1,42 +1,22 @@
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { ApolloDriverConfig } from '@nestjs/apollo';
-import { ConfigService } from '@nestjs/config';
+import { registerAs } from '@nestjs/config';
 import { join } from 'path';
 
-/**
- * GraphQL configuration factory
- * Creates GraphQL configuration based on environment variables
- */
-export const graphqlConfig = (configService: ConfigService): ApolloDriverConfig => {
-  const isDevelopment = configService.get('NODE_ENV') === 'development';
-
-  return {
+export default registerAs(
+  'graphQLConfig',
+  (): ApolloDriverConfig => ({
+    path: process.env.GRAPHQL_PATH || '/graphql',
+    sortSchema: Boolean(process.env.GRAPHQL_SORT_SCHEMA) || false,
     autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-    sortSchema: true,
-    // Playground and introspection for development
-    playground: false,
-    introspection: configService.get<boolean>('GRAPHQL_INTROSPECTION', isDevelopment),
-
-    // Debug mode for development
-    debug: isDevelopment,
-
-    // GraphQL path
-    path: configService.get<string>('GRAPHQL_PATH') ?? '/graphql',
-
-    // Apollo Server plugins
-    plugins: isDevelopment
-      ? [
-          // Local default landing page for development
-          ApolloServerPluginLandingPageLocalDefault({
-            footer: false,
-            embed: true,
-          }),
-        ]
-      : [],
-  };
-};
-
-/**
- * Export default configuration for direct use
- */
-export default graphqlConfig;
+    playground: Boolean(process.env.GRAPHQL_PLAYGROUND) || false,
+    introspection: Boolean(process.env.GRAPHQL_INTROSPECTION) || false,
+    debug: Boolean(process.env.NODE_ENV === 'development') || false,
+    plugins: [
+      process.env.NODE_ENV === 'development'
+        ? ApolloServerPluginLandingPageLocalDefault({ footer: false, embed: true })
+        : ApolloServerPluginLandingPageLocalDefault(),
+    ],
+    subscriptions: { 'graphql-ws': true },
+  }),
+);
