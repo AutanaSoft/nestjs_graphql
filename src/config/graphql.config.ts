@@ -1,4 +1,5 @@
 import { ApolloDriverConfig } from '@nestjs/apollo';
+import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { ConfigService } from '@nestjs/config';
 import { join } from 'path';
 
@@ -17,7 +18,8 @@ export const graphqlConfig = (
     sortSchema: true,
 
     // Playground and introspection for development
-    playground: configService.get<boolean>('GRAPHQL_PLAYGROUND') ?? isDevelopment,
+    playground:
+      configService.get<boolean>('GRAPHQL_PLAYGROUND') ?? isDevelopment,
     introspection:
       configService.get<boolean>('GRAPHQL_INTROSPECTION') ?? isDevelopment,
 
@@ -26,10 +28,21 @@ export const graphqlConfig = (
 
     // GraphQL path
     path: configService.get<string>('GRAPHQL_PATH') ?? '/graphql',
+
+    // Apollo Server plugins
+    plugins: isDevelopment
+      ? [
+          // Local default landing page for development
+          ApolloServerPluginLandingPageLocalDefault({
+            footer: false,
+            embed: true,
+          }),
+        ]
+      : [],
   };
 };
 
 /**
  * Export default configuration for direct use
  */
-export default graphqlConfig; 
+export default graphqlConfig;

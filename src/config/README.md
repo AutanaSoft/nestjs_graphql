@@ -23,12 +23,27 @@ DATABASE_NAME=nestjs_graphql   # Database name
 - **Module**: `src/graphql/graphql.module.ts`
 - **Purpose**: Apollo GraphQL server configuration
 
+#### Features:
+- **Development Landing Page**: Uses `ApolloServerPluginLandingPageLocalDefault` for a better development experience
+- **Auto Schema Generation**: Automatically generates `schema.gql` file
+- **Environment-Based Configuration**: Different settings for development and production
+
 #### Environment Variables:
 ```bash
 GRAPHQL_PLAYGROUND=true        # Enable GraphQL Playground
 GRAPHQL_INTROSPECTION=true     # Enable schema introspection
 GRAPHQL_PATH=/graphql          # GraphQL endpoint path
 ```
+
+#### Development Features:
+- Enhanced landing page with embedded GraphQL Playground
+- Query debugging and introspection enabled
+- Detailed error messages and stack traces
+
+#### Production Features:
+- Optimized landing page
+- Introspection disabled for security
+- Minimal error exposure
 
 ### General Environment Variables:
 ```bash
@@ -40,8 +55,14 @@ PORT=3000                     # Application port
 
 All configurations are automatically loaded when the application starts. The configurations adapt based on the `NODE_ENV` environment variable:
 
-- **Development**: More verbose logging, playground enabled, etc.
+- **Development**: More verbose logging, enhanced playground, landing page plugins, etc.
 - **Production**: Optimized for performance and security
+
+## Apollo Server Plugins
+
+In development mode, the following plugins are automatically enabled:
+
+- **ApolloServerPluginLandingPageLocalDefault**: Provides an enhanced local development landing page with embedded GraphQL Playground
 
 ## File Structure
 
