@@ -2,6 +2,8 @@
     "cSpell.words": [
         "devcontainers",
         "nestjs",
-        "postgres"
+        "pgadmin",
+        "postgres",
+        "redis"
     ]
 }
